@@ -1,0 +1,11 @@
+firewall.log
+*.log
+logs/
+
+.env
+config.json
+
+__pycache__/
+*.pyc
+
+.vscode/

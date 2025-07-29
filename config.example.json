@@ -1,0 +1,7 @@
+{
+    "blocked_ips": ["x.x.x.x"],
+    "blocked_ports": [23, 445, 135],
+    "whitelisted_ips": ["x.x.x.x"],
+    "allowed_protocols": ["TCP", "UDP", "ICMP"],
+    "interface": "Wi-Fi"
+}
