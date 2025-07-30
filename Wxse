@@ -1,0 +1,132 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class RedBlackCalculator extends JFrame implements ActionListener {
+
+    private JTextField display;
+    private String input = "";
+    private String operator = "";
+    private double num1 = 0;
+
+    public RedBlackCalculator() {
+        setTitle("Red & Black Calculator");
+        setSize(350, 500);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        getContentPane().setBackground(Color.BLACK);
+        setLayout(null);
+
+        // Display field
+        display = new JTextField();
+        display.setBounds(20, 20, 300, 60);
+        display.setFont(new Font("Consolas", Font.BOLD, 28));
+        display.setEditable(false);
+        display.setBackground(Color.BLACK);
+        display.setForeground(Color.RED);
+        display.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+        add(display);
+
+        // Button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(5, 4, 10, 10));
+        buttonPanel.setBounds(20, 100, 300, 340);
+        buttonPanel.setBackground(Color.BLACK);
+        add(buttonPanel);
+
+        // Button texts
+        String[] buttons = {
+            "C", "←", "/", "*",
+            "7", "8", "9", "-",
+            "4", "5", "6", "+",
+            "1", "2", "3", "=",
+            "0", ".", "", ""
+        };
+
+        for (String text : buttons) {
+            if (text.isEmpty()) {
+                buttonPanel.add(new JLabel()); // filler space
+                continue;
+            }
+
+            JButton button = new JButton(text);
+            button.setFont(new Font("Segoe UI", Font.BOLD, 20));
+            button.setFocusPainted(false);
+            button.setBackground(Color.BLACK);
+            button.setForeground(Color.RED);
+            button.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+
+            // Hover effect
+            button.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    button.setBackground(Color.RED);
+                    button.setForeground(Color.BLACK);
+                }
+
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    button.setBackground(Color.BLACK);
+                    button.setForeground(Color.RED);
+                }
+            });
+
+            button.addActionListener(this);
+            buttonPanel.add(button);
+        }
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+
+        if (cmd.matches("[0-9.]")) {
+            input += cmd;
+            display.setText(input);
+        } else if (cmd.equals("C")) {
+            input = "";
+            operator = "";
+            num1 = 0;
+            display.setText("");
+        } else if (cmd.equals("←")) {
+            if (input.length() > 0) {
+                input = input.substring(0, input.length() - 1);
+                display.setText(input);
+            }
+        } else if (cmd.equals("=")) {
+            calculate();
+        } else if (cmd.matches("[+\\-*/]")) {
+            if (!input.isEmpty()) {
+                num1 = Double.parseDouble(input);
+                operator = cmd;
+                input = "";
+            }
+        }
+    }
+
+    private void calculate() {
+        try {
+            double num2 = Double.parseDouble(input);
+            double result = 0;
+
+            switch (operator) {
+                case "+": result = num1 + num2; break;
+                case "-": result = num1 - num2; break;
+                case "*": result = num1 * num2; break;
+                case "/": result = num2 == 0 ? 0 : num1 / num2; break;
+                default: return;
+            }
+
+            display.setText(String.valueOf(result));
+            input = String.valueOf(result);
+            operator = "";
+        } catch (Exception ex) {
+            display.setText("Error");
+        }
+    }
+
+    public static void main(String[] args) {
+        new RedBlackCalculator();
+    }
+}
